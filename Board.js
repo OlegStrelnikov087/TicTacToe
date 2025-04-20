@@ -37,22 +37,4 @@ class Board {
 
         return this.status.mapValues[row][col] === '';
     }
-
-    fillCell(event) {
-        // Получаем строку и колонку куда кликнули.
-        let row = +event.target.dataset.row;
-        let col = +event.target.dataset.col;
-        document.querySelector(`[data-row="${row}"][data-col="${col}"]`).className = 'cell'+this.status.phase
-        // Заполняем ячейку и ставим значение в массиве, в свойстве mapValues.
-       
-        // event.target.textContent = this.status.phase;
-        lottie.loadAnimation({
-            container: document.querySelector('.cellX'),
-            renderer: 'svg',
-            loop: false,
-            autoplay: true,
-            path: 'animations/cross.json'
-        })
-        this.status.mapValues[row][col] = this.status.phase;
-    }
 }

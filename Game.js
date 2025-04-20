@@ -26,7 +26,7 @@ class Game {
     }
 
     playerMove(event) {
-        event.target.className = 'cell'+ this.status.phase
+        event.target.className = 'cell' + this.status.phase
         lottie.loadAnimation({
             container: event.target,
             renderer: 'svg',
@@ -52,11 +52,10 @@ class Game {
                 rowId = Math.round(Math.random() * 2)
                 colId = Math.round(Math.random() * 2)
             }
-            // document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).textContent = this.status.phase
-            // document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).id = 'active'
-            document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).className = 'cell'+this.status.phase
+            let cell = document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`)
+            cell.className = 'cell' + this.status.phase
             lottie.loadAnimation({
-                container: document.querySelector('.cell0'),
+                container: cell,
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
@@ -98,6 +97,35 @@ class Game {
 
     sayWonPhrase() {
         let figure = this.status.phase === 'X' ? 'Крестики' : 'Нолики';
-        alert(`${figure} выиграли!`);
+        // let modalText = document.createTextNode(`${figure} выиграли!`)
+        // let modal = document.createElement('div')
+        // modal.appendChild(modalText)
+        // modal.appendChild(modalText)
+        // let closeModalBtn = document.createElement('button')
+        // closeModalBtn.className = 'closeModalBtn'
+        // closeModalBtn.addEventListener('click', this.closeModalListener)
+        // modal.appendChild(closeModalBtn)
+        // modal.className = 'modal'
+        document.body.append(this.createModal(figure))
+        // alert(`${figure} выиграли!`);
+    }
+
+    closeModalListener() {
+        document.querySelector('.modal').remove()
+    }
+
+    createModal(figure) {
+        let modalText = document.createTextNode(`${figure} выиграли!`)
+        let modal = document.createElement('div')
+        modal.appendChild(modalText)
+        modal.appendChild(modalText)
+        let closeModalBtn = document.createElement('button')
+        let btnText = document.createTextNode('Закрыть')
+        closeModalBtn.className = 'closeModalBtn'
+        closeModalBtn.appendChild(btnText)
+        closeModalBtn.addEventListener('click', this.closeModalListener)
+        modal.appendChild(closeModalBtn)
+        modal.className = 'modal'
+        return modal
     }
 }
