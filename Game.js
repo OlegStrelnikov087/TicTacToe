@@ -10,7 +10,8 @@ class Game {
         if (!this.isCorrectClick(event)) {
             return;
         }
-        this.board.fillCell(event);
+        // this.board.fillCell(event);
+        this.playerMove(event)
         if (this.hasWon()) {
             // Ставим статус в "остановлено".
             this.status.setStatusStopped();
@@ -22,6 +23,21 @@ class Game {
         this.status.togglePhase();
         this.status.botOrPlayerPhase = 'bot'
         this.botMove()
+    }
+
+    playerMove(event) {
+        event.target.className = 'cell'+ this.status.phase
+        lottie.loadAnimation({
+            container: event.target,
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            path: 'animations/cross.json'
+        })
+        let row = +event.target.dataset.row;
+        let col = +event.target.dataset.col;
+        this.status.mapValues[row][col] = this.status.phase;
+
     }
 
     botMove() {
@@ -36,7 +52,16 @@ class Game {
                 rowId = Math.round(Math.random() * 2)
                 colId = Math.round(Math.random() * 2)
             }
-            document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).textContent = this.status.phase
+            // document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).textContent = this.status.phase
+            // document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).id = 'active'
+            document.querySelector(`[data-row="${rowId}"][data-col="${colId}"]`).className = 'cell'+this.status.phase
+            lottie.loadAnimation({
+                container: document.querySelector('.cell0'),
+                renderer: 'svg',
+                loop: false,
+                autoplay: true,
+                path: 'animations/oval.json'
+            })
             this.status.mapValues[rowId][colId] = this.status.phase
             if (this.hasWon()) {
                 // Ставим статус в "остановлено".
