@@ -28,7 +28,7 @@ class Game {
         if (!this.status.isStatusPlaying()) {
             return
         }
-        setTimeout(()=>{
+        setTimeout(() => {
 
             let rowId = Math.round(Math.random() * 2)
             let colId = Math.round(Math.random() * 2)
@@ -46,7 +46,7 @@ class Game {
             }
             this.status.togglePhase()
             this.status.botOrPlayerPhase = 'player'
-        }, 3000)
+        }, 1500)
     }
 
     isCorrectClick(event) {
