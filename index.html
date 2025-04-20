@@ -11,7 +11,6 @@
 </head>
 
 <body>
-    <!-- <div class="modal"></div> -->
     <h1>Игра крестики-нолики </h1>
     <div id="animation-container">
         <table id="game"></table>
@@ -22,11 +21,11 @@
     <script src="Status.js"></script>
     <script>
         lottie.loadAnimation({
-            container: document.getElementById('animation-container'), // контейнер для анимации
-            renderer: 'svg', // тип рендерера (может быть 'svg', 'canvas' или 'html')
-            loop: false, // зацикливание анимации
-            autoplay: true, // автоматический запуск анимации
-            path: 'animations/grid.json' // путь к вашему JSON-файлу с анимацией
+            container: document.getElementById('animation-container'), 
+            renderer: 'svg', 
+            loop: false, 
+            autoplay: true,
+            path: 'animations/grid.json' 
 
         });
 

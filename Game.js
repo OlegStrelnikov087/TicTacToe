@@ -66,7 +66,9 @@ class Game {
                 // Ставим статус в "остановлено".
                 this.status.setStatusStopped();
                 // Сообщаем о победе пользователя.
+
                 this.sayWonPhrase();
+
             }
             this.status.togglePhase()
             this.status.botOrPlayerPhase = 'player'
@@ -96,22 +98,35 @@ class Game {
     }
 
     sayWonPhrase() {
-        let figure = this.status.phase === 'X' ? 'Крестики' : 'Нолики';
-        // let modalText = document.createTextNode(`${figure} выиграли!`)
-        // let modal = document.createElement('div')
-        // modal.appendChild(modalText)
-        // modal.appendChild(modalText)
-        // let closeModalBtn = document.createElement('button')
-        // closeModalBtn.className = 'closeModalBtn'
-        // closeModalBtn.addEventListener('click', this.closeModalListener)
-        // modal.appendChild(closeModalBtn)
-        // modal.className = 'modal'
-        document.body.append(this.createModal(figure))
-        // alert(`${figure} выиграли!`);
+        setTimeout(() => {
+            let figure = this.status.phase === 'X' ? 'Нолики' : 'Крестики'; 
+            console.log(figure);
+            document.body.append(this.createModal(figure))
+        }, 1000)
     }
 
-    closeModalListener() {
+    deleteAllFigures() {
         document.querySelector('.modal').remove()
+        const table = document.querySelector('#game')
+        table.childNodes.forEach(tr => {
+            tr.childNodes.forEach(td => {
+                if (td.firstChild) {
+                    td.removeChild(td.firstChild)
+                }
+            })
+        })
+
+    }
+
+    resetSettings() {
+        this.status.mapValues = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', ''],
+        ]
+        this.status.phase = 'X' // начинают также крестики, без смены
+        this.status.botOrPlayerPhase = 'player' // также первый начинает игрок , а не бот, без смены
+        this.status.status = 'playing'
     }
 
     createModal(figure) {
@@ -123,9 +138,15 @@ class Game {
         let btnText = document.createTextNode('Закрыть')
         closeModalBtn.className = 'closeModalBtn'
         closeModalBtn.appendChild(btnText)
-        closeModalBtn.addEventListener('click', this.closeModalListener)
+        closeModalBtn.addEventListener('click', () => {
+            this.resetSettings()
+            this.deleteAllFigures()
+            modal.remove()
+        })
         modal.appendChild(closeModalBtn)
         modal.className = 'modal'
         return modal
     }
+
+
 }
