@@ -28,3 +28,5 @@ class Status {
         this.phase = this.phase === 'X' ? '0' : 'X';
     }
 }
+
+export {Status}

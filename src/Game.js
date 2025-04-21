@@ -1,3 +1,6 @@
+import lottie from "lottie-web";
+import ovalAnimation from "./animations/oval.json"
+import crossAnimation from "./animations/cross.json"
 class Game {
 
     init(status, board) {
@@ -32,7 +35,7 @@ class Game {
             renderer: 'svg',
             loop: false,
             autoplay: true,
-            path: 'animations/cross.json'
+            animationData: crossAnimation
         })
         let row = +event.target.dataset.row;
         let col = +event.target.dataset.col;
@@ -59,7 +62,8 @@ class Game {
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
-                path: 'animations/oval.json'
+                // path: 'animations/oval.json'
+                animationData: ovalAnimation
             })
             this.status.mapValues[rowId][colId] = this.status.phase
             if (this.hasWon()) {
@@ -100,7 +104,6 @@ class Game {
     sayWonPhrase() {
         setTimeout(() => {
             let figure = this.status.phase === 'X' ? 'Нолики' : 'Крестики'; 
-            console.log(figure);
             document.body.append(this.createModal(figure))
         }, 1000)
     }
@@ -150,3 +153,5 @@ class Game {
 
 
 }
+
+export const game = new Game()

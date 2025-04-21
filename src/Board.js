@@ -38,3 +38,5 @@ class Board {
         return this.status.mapValues[row][col] === '';
     }
 }
+
+export const board = new Board()
