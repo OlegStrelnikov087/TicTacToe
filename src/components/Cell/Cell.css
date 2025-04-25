@@ -1,0 +1,15 @@
+.cell {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    /* квадрат */
+    position: relative;
+    overflow: hidden;
+    /* лишнее обрежется */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
