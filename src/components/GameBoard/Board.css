@@ -1,34 +1,41 @@
 .gameBoard {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr); /* квадратные строки */
+    grid-template-rows: repeat(3, 1fr);
     width: 100%;
     height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .boardContainer {
     position: relative;
-    width: 300px;
-    height: 300px;
-    margin: auto;
+    width: 90vmin;
+    height: 90vmin;
+    max-width: 500px;
+    max-height: 500px;
+    min-width: 200px;
+    min-height: 200px;
 }
 
-.boardAnimation {
+.animationLayer {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
     pointer-events: none;
 }
 
-.cell lottie-react {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 4px;
+@media (max-height: 500px) {
+    .boardСontainer {
+      width: 70vmin;
+      height: 70vmin;
+      min-width: 150px;
+      min-height: 150px;
+    }
+  
+    .header {
+      font-size: 1.5rem;
+    }
   }

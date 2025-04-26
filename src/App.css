@@ -1,0 +1,17 @@
+.headed {
+    flex: 0 0 auto;
+    padding: 10px;
+    text-align: center;
+    background: #f9f9f9;
+    z-index: 10;
+    margin: 0;
+    font-size: 2rem;
+}
+
+.main {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
