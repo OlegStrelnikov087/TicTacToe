@@ -1,17 +1,18 @@
-.headed {
-    flex: 0 0 auto;
-    padding: 10px;
-    text-align: center;
-    background: #f9f9f9;
-    z-index: 10;
-    margin: 0;
-    font-size: 2rem;
-}
+  body, #root {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 99vh;
+  }
 
-.main {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  header {
+      text-align: center;
+      font-size: 2rem;
+  }
+
+  main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
   }

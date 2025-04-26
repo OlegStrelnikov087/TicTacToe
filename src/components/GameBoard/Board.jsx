@@ -81,9 +81,7 @@ function Board() {
 
   return (
     <div className="boardContainer">
-      <div className="animationLayer">
-      <Lottie animationData={gridAnimation} autoPlay loop={false} className="boardAnimation" />
-      </div>
+      <Lottie animationData={gridAnimation} autoPlay loop={false} />
       <div className="gameBoard">
         {board.map((cell, i) => (
           <Cell key={i} value={cell} onClick={() => handleClick(i)} />

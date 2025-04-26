@@ -8,10 +8,10 @@ const Cell = ({ value, onClick }) => {
   return (
     <div className="cell" onClick={onClick}>
       {value === "X" && (
-        <Lottie animationData={crossAnimation} autoplay loop={false} className="cellAnimation"/> //style={{ width: "80", height: "80%" }} 
+          <Lottie animationData={crossAnimation} autoplay loop={false} /> //style={{ width: "80", height: "80%" }} 
       )}
       {value === "O" && (
-        <Lottie animationData={ovalAnimation} autoplay loop={false} className="cellAnimation"/>
+          <Lottie animationData={ovalAnimation} autoplay loop={false} />
       )}
     </div>
   );
