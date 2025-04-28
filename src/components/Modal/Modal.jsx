@@ -1,12 +1,11 @@
 import React from "react";
 import "./Modal.css";
 
-const Modal = ({ winner, onRestart }) => {
+const Modal = ({ winner, onRestart, playerFigure, botFigure, drawStatus }) => {
   const getTitle = () => {
-    if (winner === "draw") return "Ничья!";
-    if (winner === "X") return "Ты победил! 🎉";
-    if (winner === "O") return "Бот победил 🤖";
-    return "";
+    if (winner === playerFigure) return "Ты победил! 🎉";
+    if (winner === botFigure) return "Бот победил 🤖";
+    if (winner === drawStatus) return "Ничья!";
   };
 
   return (
