@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Board.css";
+
 import Lottie from "lottie-react";
 import gridAnimation from "../../assets/grid.json";
 
@@ -11,16 +12,24 @@ import {
   BOT_FIGURE,
   BOARD_ARRAY,
   DRAW_STATUS,
+  BOT_MOVE_TIME
+} from "../../utils/game-const";
+
+import {
   Player,
-  GameResult,
-} from "../../utils/gameConst";
+  GameResult
+} from "../../types/types"
 
 import {
   checkWinner,
   isGameOver,
-  restartGame,
-  makeBotMove,
-} from "../../utils/gameController";
+} from "../../utils/game-logic";
+
+import {
+  handleBotMove,
+  handlePlayerMove,
+  restartGame
+} from "../../utils/game-state"
 
 /**
  * Компонент игрового поля для игры "Крестики-нолики".
@@ -33,51 +42,49 @@ const Board: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [winner, setWinner] = useState<GameResult | null>(null);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
+  const [animationsComplete, setAnimationsComplete] = useState(0);
 
-  /**
-   * Обработчик клика по ячейке. Игрок делает свой ход.
-   * @param index Индекс ячейки, по которой был клик.
-   */
-  const handleClick = (index: number): void => {
-    if (!isPlayerTurn || board[index] || checkWinner(board)) return;
-
-    const newBoard = [...board];
-    newBoard[index] = PLAYER_FIGURE;
-    setBoard(newBoard);
-    setIsPlayerTurn(false);
-  };
-  
   /**
    * Обработчик перезапуска игры.
    * Вызывается при нажатии на кнопку в модальном окне.
    */
   const handleRestart = (): void => {
-    restartGame(setBoard, setIsPlayerTurn, setWinner, setShowModal);
+    restartGame(setBoard, setIsPlayerTurn, setWinner, setShowModal, setAnimationsComplete);
   };
 
   useEffect(() => {
-    // Проверка завершения игры после каждого хода
-    if (isGameOver(board)) {
-      setWinner(checkWinner(board) || DRAW_STATUS);
-      setShowModal(true);
-      return;
-    }
+    const filledCells = board.filter(cell => cell !== null).length;
 
-    // Если ход бота, запускаем его ход с задержкой
+    // Если игра завершена и все анимации завершились — показать модалку
+    if (isGameOver(board)) {
+      if (animationsComplete === filledCells) {
+        setTimeout(() => {
+          setWinner(checkWinner(board) || DRAW_STATUS);
+          setShowModal(true);
+        }, 100); // небольшой буфер
+      }
+      return; // игра завершена — ничего больше не делаем
+    }
+    // Если сейчас ход бота — запускаем его с задержкой
     if (!isPlayerTurn) {
       const timeout = setTimeout(() => {
-        makeBotMove(setBoard, setIsPlayerTurn, board);
-      }, 600);
+        handleBotMove(board, setBoard, setIsPlayerTurn);
+      }, BOT_MOVE_TIME);
       return () => clearTimeout(timeout);
     }
-  }, [board, isPlayerTurn]);
+  }, [board, isPlayerTurn, animationsComplete]);
 
   return (
     <div className="boardContainer">
       <Lottie animationData={gridAnimation} autoPlay loop={false} />
       <div className="gameBoard">
         {board.map((cell, i) => (
-          <Cell key={i} value={cell} onClick={() => handleClick(i)} />
+          <Cell
+            key={i}
+            value={cell}
+            onClick={() => handlePlayerMove(i, board, setBoard, setIsPlayerTurn, PLAYER_FIGURE, isPlayerTurn)}
+            onAnimationComplete={() => setAnimationsComplete(prev => prev + 1)}
+          />
         ))}
       </div>
 

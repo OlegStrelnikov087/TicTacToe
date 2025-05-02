@@ -4,17 +4,8 @@ import "./Cell.css";
 
 import crossAnimation from "../../assets/cross.json";
 import ovalAnimation from "../../assets/oval.json";
-import { CROSS, Player } from "../../utils/gameConst";
-
-/**
- * Интерфейс для пропсов компонента Cell.
- * @param value - Значение ячейки, которое может быть 'X', 'O' или null.
- * @param onClick - Функция, которая будет вызываться при клике на ячейку.
- */
-interface CellProps {
-  value: Player | null;
-  onClick: () => void;
-}
+import { CROSS} from "../../utils/game-const";
+import { CellProps } from "../../types/types";
 
 /**
  * Компонент, представляющий одну ячейку на игровом поле.
@@ -23,7 +14,7 @@ interface CellProps {
  * @param onClick - Функция, которая вызывается при клике на ячейку.
  * @returns JSX элемент ячейки с анимацией.
  */
-const Cell: React.FC<CellProps> = ({ value, onClick }) => {
+const Cell: React.FC<CellProps> = ({ value, onClick, onAnimationComplete }) => {
   return (
     <div className="cell" onClick={onClick}>
       {value && (
@@ -31,6 +22,7 @@ const Cell: React.FC<CellProps> = ({ value, onClick }) => {
           animationData={value === CROSS ? crossAnimation : ovalAnimation}
           autoplay
           loop={false}
+          onComplete={onAnimationComplete}
         />
       )}
     </div>
