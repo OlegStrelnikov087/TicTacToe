@@ -8,17 +8,16 @@ import Modal from "../Modal/Modal";
 import Cell from "../Cell/Cell";
 
 import {
-  PLAYER_FIGURE,
-  BOT_FIGURE,
   BOARD_ARRAY,
   DRAW_STATUS,
   BOT_MOVE_TIME
 } from "../../utils/game-const";
 
 import {
-  Player,
-  GameResult
-} from "../../types/types"
+  CellValue,
+  GameResult,
+  RoleToFigureMap
+} from "../../types/types";
 
 import {
   checkWinner,
@@ -29,25 +28,23 @@ import {
   handleBotMove,
   handlePlayerMove,
   restartGame
-} from "../../utils/game-state"
+} from "../../utils/game-state";
+
+interface BoardProps {
+  figureMap: RoleToFigureMap;
+}
 
 /**
  * Компонент игрового поля для игры "Крестики-нолики".
  * Отображает поле, позволяет игроку совершать ход, запускает ходы бота и отображает результат игры.
- * @returns JSX элемент, который представляет игровое поле с анимацией и модальным окном.
  */
-const Board: React.FC = () => {
-  // Состояния компонента
-  const [board, setBoard] = useState<Player[]>([...BOARD_ARRAY]);
+const Board: React.FC<BoardProps> = ({ figureMap }) => {
+  const [board, setBoard] = useState<CellValue[]>([...BOARD_ARRAY]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [winner, setWinner] = useState<GameResult | null>(null);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
   const [animationsComplete, setAnimationsComplete] = useState(0);
 
-  /**
-   * Обработчик перезапуска игры.
-   * Вызывается при нажатии на кнопку в модальном окне.
-   */
   const handleRestart = (): void => {
     restartGame(setBoard, setIsPlayerTurn, setWinner, setShowModal, setAnimationsComplete);
   };
@@ -55,24 +52,23 @@ const Board: React.FC = () => {
   useEffect(() => {
     const filledCells = board.filter(cell => cell !== null).length;
 
-    // Если игра завершена и все анимации завершились — показать модалку
     if (isGameOver(board)) {
       if (animationsComplete === filledCells) {
         setTimeout(() => {
           setWinner(checkWinner(board) || DRAW_STATUS);
           setShowModal(true);
-        }, 100); // небольшой буфер
+        }, 100);
       }
-      return; // игра завершена — ничего больше не делаем
+      return;
     }
-    // Если сейчас ход бота — запускаем его с задержкой
+
     if (!isPlayerTurn) {
       const timeout = setTimeout(() => {
-        handleBotMove(board, setBoard, setIsPlayerTurn);
+        handleBotMove(board, setBoard, setIsPlayerTurn, figureMap.bot);
       }, BOT_MOVE_TIME);
       return () => clearTimeout(timeout);
     }
-  }, [board, isPlayerTurn, animationsComplete]);
+  }, [board, isPlayerTurn, animationsComplete, figureMap.bot]);
 
   return (
     <div className="boardContainer">
@@ -82,18 +78,18 @@ const Board: React.FC = () => {
           <Cell
             key={i}
             value={cell}
-            onClick={() => handlePlayerMove(i, board, setBoard, setIsPlayerTurn, PLAYER_FIGURE, isPlayerTurn)}
+            onClick={() => handlePlayerMove(i, board, setBoard, setIsPlayerTurn, figureMap.human, isPlayerTurn)}
             onAnimationComplete={() => setAnimationsComplete(prev => prev + 1)}
           />
         ))}
       </div>
 
-      {showModal && (
+      {showModal && winner &&(
         <Modal
           winner={winner}
           onRestart={handleRestart}
-          playerFigure={PLAYER_FIGURE}
-          botFigure={BOT_FIGURE}
+          playerFigure={figureMap.human}
+          botFigure={figureMap.bot}
           drawStatus={DRAW_STATUS}
         />
       )}
