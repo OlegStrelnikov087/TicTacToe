@@ -1,32 +1,26 @@
-import React from "react";
-import Lottie from "lottie-react";
-import "./Cell.css";
+import { CellProps, GameFigure } from '@types/types';
+import Lottie from 'lottie-react';
+import '@components/cell/cell.css';
+import React, { FC } from 'react';
+import crossAnimation from '@assets/cross.json';
+import ovalAnimation from '@assets/oval.json';
 
-import crossAnimation from "../../assets/cross.json";
-import ovalAnimation from "../../assets/oval.json";
-import { CROSS} from "../../utils/game-const";
-import { CellProps } from "../../types/types";
+const animationData: Record<GameFigure, object> = {
+  [GameFigure.X]: crossAnimation,
+  [GameFigure.O]: ovalAnimation
+};
 
-/**
- * Компонент, представляющий одну ячейку на игровом поле.
- * Отображает анимацию в зависимости от значения ячейки ('X' или 'O').
- * @param value - Значение ячейки, которое может быть 'X', 'O' или null.
- * @param onClick - Функция, которая вызывается при клике на ячейку.
- * @returns JSX элемент ячейки с анимацией.
- */
-const Cell: React.FC<CellProps> = ({ value, onClick, onAnimationComplete }) => {
+export const Cell: FC<CellProps> = ({ value, handleEvent}) => {
   return (
-    <div className="cell" onClick={onClick}>
+    <div className="cell" onClick={handleEvent}>
       {value && (
         <Lottie
-          animationData={value === CROSS ? crossAnimation : ovalAnimation}
+          animationData={animationData[value]}
           autoplay
           loop={false}
-          onComplete={onAnimationComplete}
+          onComplete={handleEvent}
         />
       )}
     </div>
   );
 };
-
-export default Cell;
