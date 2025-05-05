@@ -1,43 +1,39 @@
-import { Player } from '../types/types';
-import { BOT_FIGURE } from './game-const';
+import { CellValue } from '../types/types';
+import { WINNING_LINES } from './game-const';
 
 /**
  * Возвращает индексы всех пустых ячеек на доске.
  * 
- * @param {Player[]} board Текущая игровая доска.
+ * @param {CellValue[]} board Текущая игровая доска.
  * @returns {number[]} Массив индексов пустых ячеек.
  */
-export const getEmptyCells = (board: Player[]): number[] =>
+export const getEmptyCells = (board: CellValue[]): number[] =>
   board.map((val, i) => (val === null ? i : null)).filter((i): i is number => i !== null);
 
 /**
  * Выполняет ход бота, выбирая случайную пустую ячейку.
  * 
- * @param {Player[]} board Текущая игровая доска.
- * @returns {Player[]} Новое состояние доски после хода бота.
+ * @param {CellValue[]} board Текущая игровая доска.
+ * @returns {CellValue[]} Новое состояние доски после хода бота.
  */
-export const botMove = (board: Player[]): Player[] => {
+export const botMove = (board: CellValue[], botFigure: CellValue): CellValue[] => {
   const empty = getEmptyCells(board);
   if (empty.length === 0) return board;
   const index = empty[Math.floor(Math.random() * empty.length)];
   const newBoard = [...board];
-  newBoard[index] = BOT_FIGURE;
+  newBoard[index] = botFigure;
   return newBoard;
 };
+
 
 /**
  * Проверяет наличие победителя на доске.
  * 
- * @param {Player[]} board Текущая игровая доска.
- * @returns {Player} Победившая фигура (игрок), либо null, если победителя нет.
+ * @param {CellValue[]} board Текущая игровая доска.
+ * @returns {CellValue} Победившая фигура (игрок), либо null, если победителя нет.
  */
-export const checkWinner = (board: Player[]): Player => {
-  const lines = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6],
-  ];
-  for (const [a, b, c] of lines) {
+export const checkWinner = (board: CellValue[]): CellValue => {
+  for (const [a, b, c] of WINNING_LINES) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
       return board[a];
     }
@@ -48,8 +44,8 @@ export const checkWinner = (board: Player[]): Player => {
 /**
  * Проверяет, завершена ли игра (есть победитель или доска заполнена).
  * 
- * @param {Player[]} board Текущая игровая доска.
+ * @param {CellValue[]} board Текущая игровая доска.
  * @returns {boolean} true, если игра завершена, иначе false.
  */
-export const isGameOver = (board: Player[]): boolean =>
+export const isGameOver = (board: CellValue[]): boolean =>
   !!checkWinner(board) || getEmptyCells(board).length === 0;

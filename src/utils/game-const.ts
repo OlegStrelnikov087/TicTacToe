@@ -1,49 +1,29 @@
-import type { Player } from '../types/types';
+import { CellValue} from '../types/types';
 
-/**
- * Фигура игрока — крестик.
- * @constant {Player}
- */
-export const CROSS: Player = 'X';
+/** Фигуры */
+export const CROSS: CellValue = 'X';
+export const OVAL: CellValue = 'O';
+// export const EMPTY: CellValue = 'empty';
 
-/**
- * Фигура бота — нолик.
- * @constant {Player}
- */
-export const OVAL: Player = 'O';
+/** Размеры доски */
+export const BOARD_WIDTH = 3;
+export const BOARD_HEIGHT = 3;
 
-/**
- * Фигура, которой играет пользователь (по умолчанию — крестик).
- * @constant {Player}
- */
-export const PLAYER_FIGURE: Player = CROSS;
+/** Кол-во клеток */
+export const BOARD_SIZE = BOARD_WIDTH * BOARD_HEIGHT;
 
-/**
- * Фигура, которой играет бот (по умолчанию — нолик).
- * @constant {Player}
- */
-export const BOT_FIGURE: Player = OVAL;
+/** Начальное состояние доски */
+export const BOARD_ARRAY: CellValue[] = Array(BOARD_SIZE).fill(null);
 
-/**
- * Размер игрового поля (число ячеек).
- * @constant {number}
- */
-export const BOARD_SIZE = 9;
-
-/**
- * Начальное состояние игрового поля (массив из 9 пустых ячеек).
- * @constant {Player[]}
- */
-export const BOARD_ARRAY: Player[] = Array(BOARD_SIZE).fill(null);
-
-/**
- * Статус игры в случае ничьей.
- * @constant {'draw'}
- */
+/** Значение для ничьей */
 export const DRAW_STATUS = 'draw' as const;
 
-/**
- * Задержка перед ходом бота (в миллисекундах).
- * @constant {number}
- */
+/** Задержка перед ходом бота */
 export const BOT_MOVE_TIME = 600;
+
+/** Победные линии (можно сгенерировать динамически при необходимости) */
+export const WINNING_LINES: number[][] = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],
+  [0, 4, 8], [2, 4, 6],
+];
