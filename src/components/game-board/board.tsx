@@ -2,7 +2,7 @@ import { isGameOver } from '@utils/game-logic';
 import { Cell } from '@components/cell/Cell';
 import { Modal } from '@components/modal/modal';
 import { BoardValue, GameResult } from '@types/types';
-import React, { FC, useEffect, useState, useCallback } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import '@components/game-board/board.css';
 import Lottie from 'lottie-react';
 import gridAnimation from '@assets/grid.json';
@@ -18,14 +18,17 @@ export const Board: FC = () => {
   const [board, setBoard] = useState<BoardValue[]>(BOARD_INITIAL_STATE);
   const [winner, setWinner] = useState<GameResult | null>(null);
   const [isPlayerMove, setIsPlayerMove] = useState<boolean>(true);
+  const [lastMoveIndex, setLastMoveIndex] = useState<number | null>(null)
 
   useEffect(() => {
     clearBoard();
   }, []);
 
-  const clearBoard = (): void => {
+  const clearBoard = () => {
     setBoard([...BOARD_INITIAL_STATE]);
     setWinner(null);
+    setIsPlayerMove(true);
+    setLastMoveIndex(null);
   };
 
   const handleRestart = (): void => {
@@ -33,38 +36,48 @@ export const Board: FC = () => {
     setIsPlayerMove(true);
   };
 
-  const handlePlayerMove = useCallback((index: number) => {
-    if (isPlayerMove && board[index] === EMPTY_CELL_VALUE) {
-      const newBoard = [...board];
-      newBoard[index] = PLAYER_FIGURE;
-      setBoard(newBoard);
-      const gameResult = isGameOver(newBoard)
-      if (gameResult) setWinner(gameResult);
-      setIsPlayerMove(false);
-    }
-  }, [board, isPlayerMove]);
+  const onSelect = (index: number): VoidFunction => {
+    return () => {
+      const isEmpty = board[index] === EMPTY_CELL_VALUE;
 
-  const handleBotMove = useCallback((): void => {
-    const newBoard = botMove(board);
-    setBoard(newBoard);
-    const gameResult = isGameOver(newBoard)
-    if (gameResult) setWinner(gameResult);
-    setIsPlayerMove(true);
-  }, [board]);
+      // Игрок делает ход по клику
+      if (isEmpty && isPlayerMove) {
+        console.log(lastMoveIndex);
+        
+        const newBoard = [...board];
+        newBoard[index] = PLAYER_FIGURE;
+        setBoard(newBoard);
+        setIsPlayerMove(false);
+        setLastMoveIndex(index); // Сохраняем индекс хода игрока
+      }
 
-  const cellEvent = (index: number): void => {
-    if (!isPlayerMove || board[index] !== EMPTY_CELL_VALUE) return;
-    handlePlayerMove(index);
-  }
+      // Завершаем анимацию — проверяем результат игры или ход бота
+      else if (index === lastMoveIndex) {
+        console.log(lastMoveIndex);
+        
+        const result = isGameOver(board);
+        if (result) {
+          setWinner(result); // Если игра завершена, показываем победителя
+          setLastMoveIndex(null); // Сброс индекса после завершения игры
+          return;
+        }
 
-  useEffect(() => {
-    if (!isPlayerMove && !winner) {
-      const timeout = setTimeout(() => {
-        handleBotMove();
-      }, BOT_MOVE_TIME);
-      return () => clearTimeout(timeout);
-    }
-  }, [isPlayerMove, winner]);
+        // Бот делает ход
+        if (!isPlayerMove) {
+          setTimeout(() => {
+            const newBoard = botMove(board);
+            setBoard(newBoard);
+            setIsPlayerMove(true); // Игрок снова ходит
+
+            const botIndex = newBoard.findIndex((cell, i) => cell !== board[i]);
+            if (botIndex !== -1) {
+              setLastMoveIndex(botIndex); // Сохраняем индекс хода бота
+            }
+          }, BOT_MOVE_TIME);
+        }
+      }
+    };
+  };
 
   return (
     <div className="boardContainer">
@@ -74,14 +87,14 @@ export const Board: FC = () => {
           <Cell
             key={i}
             value={cell}
-            handleSelect={() => cellEvent(i)}
+            onSelect={onSelect(i)}
           />
         ))}
       </div>
 
       {winner && (
         <Modal
-          message= {getResultGameMessage(winner, PLAYER_FIGURE)}
+          message={getResultGameMessage(winner, PLAYER_FIGURE)}
           onRestart={handleRestart}
         />
       )}
