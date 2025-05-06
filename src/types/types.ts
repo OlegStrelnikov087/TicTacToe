@@ -1,38 +1,38 @@
-/** Фигуры на поле */
-export type Figure = 'X' | 'O';
-
-/** Значение ячейки — X, O или пустая */
-export type CellValue = Figure | null;
-
-/** Роли игроков */
-export type PlayerRole = 'human' | 'bot';
-
-/** Результат игры */
-export type GameResult = Figure | 'draw';
-
-/** Пропсы для клетки */
-export interface CellProps {
-  value: CellValue;
-  onClick: () => void;
-  onAnimationComplete: () => void;
+/**
+ * Возможные фигуры игроков на поле
+ */
+export enum GameFigure {
+  X = 'X',
+  O = '0',
 }
 
-/** Пропсы для модального окна */
-export interface ModalProps {
-  winner: GameResult;
-  onRestart: () => void;
-  playerFigure: Figure;
-  botFigure: Figure;
-  drawStatus: GameResult;
-}
+/**
+ * Пустое значение поля
+ */
+export type GameEmpty = null;
 
-/** Сопоставление ролей и фигур */
-export type RoleToFigureMap = Record<PlayerRole, Figure>;
+/**
+ * Значение ячейки на полк (X, O или пусто).
+ * @typedef {('X' | 'O' | null)}
+ */
+export type BoardValue = GameFigure | GameEmpty;
 
-export interface BoardProps {
-  figureMap: RoleToFigureMap;
+/**
+ * Значение, представляющее ничью в игре
+ */
+export enum DrawResult {
+  DRAW_RESULT = 'draw'
 }
+/**
+ * Тип игрового поля
+ */
+export type Board = Array<BoardValue>;
 
-export interface FigureSelectorProps {
-  onSelect: (figure: 'X' | 'O') => void;
-}
+/**
+ * Тип, представляющий результат игры.
+ * Может быть игроком (X или O) или значением "draw" для ничьей.
+ * @typedef {BoardValue | 'draw'} GameResult
+ */
+export type GameResult = GameFigure | DrawResult;
+
+

@@ -4,9 +4,14 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,

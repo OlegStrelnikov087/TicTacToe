@@ -1,39 +1,28 @@
-import React from "react";
-import "./Modal.css";
-
-import type { ModalProps } from "../../types/types";
+import React from 'react';
+import './modal.css';
 
 /**
- * Модальное окно, отображающее результат игры.
- *
- * @param winner - Победитель (игрок, бот или ничья)
- * @param onRestart - Функция для перезапуска игры
- * @param playerFigure - Символ игрока
- * @param botFigure - Символ бота
- * @param drawStatus - Значение для ничьей
+ * Интерфейс для пропсов компонента модального окна.
+ * @type ModalProps
+ * @property {GameResult} winner Результат игры (победитель или ничья).
+ * @property {() => void} onRestart Функция для перезапуска игры.
+ * @property {GameFigure} playerFigure Фигура игрока (X или O).
  */
-const Modal: React.FC<ModalProps> = ({
-  winner,
-  onRestart,
-  playerFigure,
-  botFigure,
-  drawStatus,
-}) => {
-  const getTitle = (): string => {
-    if (winner === playerFigure) return "Ты победил! 🎉";
-    if (winner === botFigure) return "Бот победил 🤖";
-    if (winner === drawStatus) return "Ничья!";
-    return "";
-  };
+export type ModalProps = {
+  message: string
+  onRestart: VoidFunction;
+}
 
+export const Modal: React.FC<ModalProps> = ({
+  message,
+  onRestart,
+}) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>{getTitle()}</h2>
+        <h2>{message}</h2>
         <button onClick={onRestart}>Играть снова</button>
       </div>
     </div>
   );
 };
-
-export default Modal;

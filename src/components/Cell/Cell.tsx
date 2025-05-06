@@ -1,32 +1,37 @@
-import React from "react";
-import Lottie from "lottie-react";
-import "./Cell.css";
+import { BoardValue, GameFigure } from '@types/types';
+import Lottie from 'lottie-react';
+import '@components/cell/cell.css';
+import React, { FC } from 'react';
+import crossAnimation from '@assets/cross.json';
+import ovalAnimation from '@assets/oval.json';
 
-import crossAnimation from "../../assets/cross.json";
-import ovalAnimation from "../../assets/oval.json";
-import { CROSS} from "../../utils/game-const";
-import { CellProps } from "../../types/types";
+const animationData: Record<GameFigure, object> = {
+  [GameFigure.X]: crossAnimation,
+  [GameFigure.O]: ovalAnimation
+};
 
 /**
- * Компонент, представляющий одну ячейку на игровом поле.
- * Отображает анимацию в зависимости от значения ячейки ('X' или 'O').
- * @param value - Значение ячейки, которое может быть 'X', 'O' или null.
- * @param onClick - Функция, которая вызывается при клике на ячейку.
- * @returns JSX элемент ячейки с анимацией.
+ * Интерфейс для пропсов компонента клетки на игровом поле.
+ * @interface CellProps
+ * @property {BoardValue} value Текущее значение клетки (X, O или null).
+ * @property {() => void} onClick Функция для обработки клика на клетке.
  */
-const Cell: React.FC<CellProps> = ({ value, onClick, onAnimationComplete }) => {
+export interface CellProps {
+  value: BoardValue;
+  handleSelect: VoidFunction
+}
+
+export const Cell: FC<CellProps> = ({ value, handleSelect: handleSelect}) => {
   return (
-    <div className="cell" onClick={onClick}>
+    <div className="cell" onClick={handleSelect}>
       {value && (
         <Lottie
-          animationData={value === CROSS ? crossAnimation : ovalAnimation}
+          animationData={animationData[value]}
           autoplay
           loop={false}
-          onComplete={onAnimationComplete}
+          onComplete={handleSelect}
         />
       )}
     </div>
   );
 };
-
-export default Cell;

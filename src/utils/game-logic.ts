@@ -1,51 +1,60 @@
-import { CellValue } from '../types/types';
-import { WINNING_LINES } from './game-const';
+import { BoardValue, DrawResult, GameFigure, GameResult, Board } from '@types/types';
+import { BOT_FIGURE, EMPTY_CELL_VALUE } from './game-const';
 
 /**
  * Возвращает индексы всех пустых ячеек на доске.
- * 
- * @param {CellValue[]} board Текущая игровая доска.
+ *
+ * @param {BoardValue[]} board Текущая игровая доска.
  * @returns {number[]} Массив индексов пустых ячеек.
  */
-export const getEmptyCells = (board: CellValue[]): number[] =>
-  board.map((val, i) => (val === null ? i : null)).filter((i): i is number => i !== null);
+export const getIndexesOfEmptyCells = (board: Board): number[] =>
+  board.map((val, i) => (val === EMPTY_CELL_VALUE ? i : EMPTY_CELL_VALUE
+  )).filter((i): i is number => i !== EMPTY_CELL_VALUE);
 
 /**
  * Выполняет ход бота, выбирая случайную пустую ячейку.
- * 
- * @param {CellValue[]} board Текущая игровая доска.
- * @returns {CellValue[]} Новое состояние доски после хода бота.
+ *
+ * @param {BoardValue[]} board Текущая игровая доска.
+ * @returns {BoardValue[]} Новое состояние доски после хода бота.
  */
-export const botMove = (board: CellValue[], botFigure: CellValue): CellValue[] => {
-  const empty = getEmptyCells(board);
+export const botMove = (board: BoardValue[]): BoardValue[] => {
+  const empty = getIndexesOfEmptyCells(board);
   if (empty.length === 0) return board;
   const index = empty[Math.floor(Math.random() * empty.length)];
   const newBoard = [...board];
-  newBoard[index] = botFigure;
+  newBoard[index] = BOT_FIGURE;
   return newBoard;
 };
 
-
-/**
- * Проверяет наличие победителя на доске.
- * 
- * @param {CellValue[]} board Текущая игровая доска.
- * @returns {CellValue} Победившая фигура (игрок), либо null, если победителя нет.
- */
-export const checkWinner = (board: CellValue[]): CellValue => {
-  for (const [a, b, c] of WINNING_LINES) {
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return board[a];
-    }
+export const getResultGameMessage = (winner: GameResult, playerFigure: GameFigure): string => {
+  if (winner === DrawResult.DRAW_RESULT) {
+    return 'Ничья!';
+  } else if (winner === playerFigure) {
+    return 'Ты победил! 🎉';
+  } else {
+    return 'Бот победил 🤖';
   }
-  return null;
 };
 
-/**
- * Проверяет, завершена ли игра (есть победитель или доска заполнена).
- * 
- * @param {CellValue[]} board Текущая игровая доска.
- * @returns {boolean} true, если игра завершена, иначе false.
- */
-export const isGameOver = (board: CellValue[]): boolean =>
-  !!checkWinner(board) || getEmptyCells(board).length === 0;
+const isGameFigure = (figure: unknown): figure is GameFigure => {
+  return (figure === GameFigure.X || figure === GameFigure.O)
+};
+
+export const isGameOver = (board: BoardValue[]): GameResult | null => {
+  const lines = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6],
+  ];
+
+  for (const [a, b, c] of lines) {
+    const firstElem = board[a];
+    if (firstElem === board[b] && firstElem === board[c] && isGameFigure(firstElem)) {
+      return firstElem; // Победитель найден
+    }
+  }
+  // Проверка на ничью
+  const isDraw = board.every(cell => cell !== EMPTY_CELL_VALUE);
+  return isDraw ? DrawResult.DRAW_RESULT : null; // null — игра продолжается
+
+}
