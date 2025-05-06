@@ -1,17 +1,26 @@
-import { ModalProps } from '@types/types';
 import React from 'react';
 import './modal.css';
-import { getResultGameMessage } from '../../utils/game-logic'
+
+/**
+ * Интерфейс для пропсов компонента модального окна.
+ * @type ModalProps
+ * @property {GameResult} winner Результат игры (победитель или ничья).
+ * @property {() => void} onRestart Функция для перезапуска игры.
+ * @property {GameFigure} playerFigure Фигура игрока (X или O).
+ */
+export type ModalProps = {
+  message: string
+  onRestart: VoidFunction;
+}
 
 export const Modal: React.FC<ModalProps> = ({
-  winner,
+  message,
   onRestart,
-  playerFigure
 }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>{getResultGameMessage(winner, playerFigure)}</h2>
+        <h2>{message}</h2>
         <button onClick={onRestart}>Играть снова</button>
       </div>
     </div>

@@ -11,9 +11,6 @@ export const getIndexesOfEmptyCells = (board: Board): number[] =>
   board.map((val, i) => (val === EMPTY_CELL_VALUE ? i : EMPTY_CELL_VALUE
   )).filter((i): i is number => i !== EMPTY_CELL_VALUE);
 
-export const getCountOfNonEmptyCells = (board: Board): number =>
-  board.reduce<number>((total, current) => current === EMPTY_CELL_VALUE ? total : total + 1, 0)
-
 /**
  * Выполняет ход бота, выбирая случайную пустую ячейку.
  *
@@ -40,8 +37,7 @@ export const getResultGameMessage = (winner: GameResult, playerFigure: GameFigur
 };
 
 const isGameFigure = (figure: unknown): figure is GameFigure => {
-  return (figure === GameFigure.X || figure === GameFigure.O
-  );
+  return (figure === GameFigure.X || figure === GameFigure.O)
 };
 
 export const isGameOver = (board: BoardValue[]): GameResult | null => {

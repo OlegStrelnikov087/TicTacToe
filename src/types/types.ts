@@ -35,31 +35,4 @@ export type Board = Array<BoardValue>;
  */
 export type GameResult = GameFigure | DrawResult;
 
-/**
- * Интерфейс для пропсов компонента клетки на игровом поле.
- * @interface CellProps
- * @property {BoardValue} value Текущее значение клетки (X, O или null).
- * @property {() => void} onClick Функция для обработки клика на клетке.
- */
-// export interface CellProps {
-//   value: BoardValue;
-//   onClick: VoidFunction;
-//   onAnimationComplete: VoidFunction;
-// }
-export interface CellProps {
-  value: BoardValue;
-  handleEvent: VoidFunction
-}
 
-/**
- * Интерфейс для пропсов компонента модального окна.
- * @type ModalProps
- * @property {GameResult} winner Результат игры (победитель или ничья).
- * @property {() => void} onRestart Функция для перезапуска игры.
- * @property {GameFigure} playerFigure Фигура игрока (X или O).
- */
-export type ModalProps = {
-  winner: GameResult;
-  onRestart: VoidFunction;
-  playerFigure: GameFigure;
-}

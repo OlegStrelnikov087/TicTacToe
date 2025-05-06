@@ -9,15 +9,15 @@ import gridAnimation from '@assets/grid.json';
 import {
   PLAYER_FIGURE,
   BOARD_INITIAL_STATE,
-  BOT_MOVE_TIME
+  BOT_MOVE_TIME,
+  EMPTY_CELL_VALUE
 } from '@utils/game-const';
-import { botMove } from '@utils/game-logic';
+import { botMove, getResultGameMessage } from '@utils/game-logic';
 
 export const Board: FC = () => {
   const [board, setBoard] = useState<BoardValue[]>(BOARD_INITIAL_STATE);
   const [winner, setWinner] = useState<GameResult | null>(null);
-  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
-  const [animationsComplete, setAnimationsComplete] = useState(0);
+  const [isPlayerMove, setIsPlayerMove] = useState<boolean>(true);
 
   useEffect(() => {
     clearBoard();
@@ -30,46 +30,41 @@ export const Board: FC = () => {
 
   const handleRestart = (): void => {
     clearBoard();
-    setIsPlayerTurn(true);
-    setAnimationsComplete(0);
+    setIsPlayerMove(true);
   };
 
   const handlePlayerMove = useCallback((index: number) => {
-    if (isPlayerTurn && !board[index]) {
+    if (isPlayerMove && board[index] === EMPTY_CELL_VALUE) {
       const newBoard = [...board];
       newBoard[index] = PLAYER_FIGURE;
       setBoard(newBoard);
-      setIsPlayerTurn(false);
+      const gameResult = isGameOver(newBoard)
+      if (gameResult) setWinner(gameResult);
+      setIsPlayerMove(false);
     }
-  }, [board, isPlayerTurn]);
+  }, [board, isPlayerMove]);
 
   const handleBotMove = useCallback((): void => {
     const newBoard = botMove(board);
     setBoard(newBoard);
-    setIsPlayerTurn(true);
+    const gameResult = isGameOver(newBoard)
+    if (gameResult) setWinner(gameResult);
+    setIsPlayerMove(true);
   }, [board]);
 
   const cellEvent = (index: number): void => {
-    if (!isPlayerTurn || board[index]) return;
+    if (!isPlayerMove || board[index] !== EMPTY_CELL_VALUE) return;
     handlePlayerMove(index);
-    setAnimationsComplete(prev => prev + 1);
   }
 
   useEffect(() => {
-    const gameResult = isGameOver(board);
-
-    if (gameResult) {
-      setWinner(gameResult);
-      return;
-    }
-
-    if (!isPlayerTurn) {
+    if (!isPlayerMove && !winner) {
       const timeout = setTimeout(() => {
         handleBotMove();
       }, BOT_MOVE_TIME);
       return () => clearTimeout(timeout);
     }
-  }, [board, isPlayerTurn, animationsComplete]);
+  }, [isPlayerMove, winner]);
 
   return (
     <div className="boardContainer">
@@ -77,18 +72,17 @@ export const Board: FC = () => {
       <div className="gameBoard">
         {board && board.map((cell, i) => (
           <Cell
-          key={i}
-          value={cell}
-          handleEvent={()=>cellEvent(i)}
-        />
+            key={i}
+            value={cell}
+            handleSelect={() => cellEvent(i)}
+          />
         ))}
       </div>
 
       {winner && (
         <Modal
-          winner={winner}
+          message= {getResultGameMessage(winner, PLAYER_FIGURE)}
           onRestart={handleRestart}
-          playerFigure={PLAYER_FIGURE}
         />
       )}
     </div>
