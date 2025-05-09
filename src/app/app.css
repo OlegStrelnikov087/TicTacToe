@@ -12,6 +12,7 @@
 
   main {
       flex-grow: 1;
+      flex-wrap: wrap;
       display: flex;
       justify-content: center;
       align-items: center;

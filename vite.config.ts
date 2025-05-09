@@ -14,7 +14,6 @@ export default defineConfig({
     },
   },
   publicDir: 'public',
-  root: './src',
   plugins: [react()],
   build: {
     outDir: path.resolve(__dirname, 'dist'),

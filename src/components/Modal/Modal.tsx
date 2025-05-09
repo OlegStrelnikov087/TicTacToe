@@ -1,27 +1,22 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import './modal.css';
 
-/**
- * Интерфейс для пропсов компонента модального окна.
- * @type ModalProps
- * @property {GameResult} winner Результат игры (победитель или ничья).
- * @property {() => void} onRestart Функция для перезапуска игры.
- * @property {GameFigure} playerFigure Фигура игрока (X или O).
- */
-export type ModalProps = {
-  message: string
-  onRestart: VoidFunction;
+type ModalProps = {
+  content: ReactNode;
+  playAgainButtonText: string;
+  onClose: VoidFunction;
 }
 
 export const Modal: React.FC<ModalProps> = ({
-  message,
-  onRestart,
+  content,
+  playAgainButtonText: playAgainButtonText,
+  onClose,
 }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>{message}</h2>
-        <button onClick={onRestart}>Играть снова</button>
+        {content}
+        <button onClick={onClose}>{playAgainButtonText}</button>
       </div>
     </div>
   );

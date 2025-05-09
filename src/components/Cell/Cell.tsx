@@ -1,7 +1,7 @@
 import { BoardValue, GameFigure } from '@types/types';
 import Lottie from 'lottie-react';
 import '@components/cell/cell.css';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import crossAnimation from '@assets/cross.json';
 import ovalAnimation from '@assets/oval.json';
 
@@ -10,26 +10,27 @@ const animationData: Record<GameFigure, object> = {
   [GameFigure.O]: ovalAnimation
 };
 
-/**
- * Интерфейс для пропсов компонента клетки на игровом поле.
- * @interface CellProps
- * @property {BoardValue} value Текущее значение клетки (X, O или null).
- * @property {() => void} onClick Функция для обработки клика на клетке.
- */
 interface CellProps {
   value: BoardValue;
-  onSelect: VoidFunction,
+  index: number
+  onSelect: (index: number, event: 'click' | 'complete') => void;
+  isLastMove: boolean
 }
 
-export const Cell: FC<CellProps> = ({ value, onSelect: onSelect }) => {
+export const Cell: FC<CellProps> = ({ value, index, onSelect: onSelect, isLastMove }) => {
   return (
-    <div className="cell" onClick={onSelect}>
+    <div className="cell" onClick={()=>onSelect(index, 'click')}>
       {value && (
         <Lottie
           animationData={animationData[value]}
           autoplay
           loop={false}
-          onComplete={onSelect}
+          onComplete={()=>{
+            if (isLastMove) {
+              onSelect(index, 'complete')
+            }
+          }}
+
         />
       )}
     </div>

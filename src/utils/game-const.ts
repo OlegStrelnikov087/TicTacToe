@@ -1,29 +1,19 @@
-import { GameEmpty, GameFigure, Board } from '@types/types';
+import { GameEmpty, GameFigure, Board, InitialGameConfig, GameRole } from '@types/types';
 
-/**
- * Фигура, которой играет пользователь (по умолчанию — крестик).
- * @constant {BoardValue}
- */
-export const PLAYER_FIGURE: GameFigure = GameFigure.X;
+export const INITIAL_GAME: InitialGameConfig = {
+    starter: GameRole.PLAYER,
+    playerFigure: GameFigure.X,
+    botFigure: GameFigure.O,
+  };
 
-/**
- * Фигура, которой играет бот (по умолчанию — нолик).
- * @constant {BoardValue}
- */
-export const BOT_FIGURE: GameFigure = GameFigure.O;
+// export const PLAYER_FIGURE: GameFigure = GameFigure.X;
 
-/**
- * Размер игрового поля (число ячеек).
- * @constant {number}
- */
+// export const BOT_FIGURE: GameFigure = GameFigure.O;
+
 export const BOARD_SIZE = 9;
 
 export const EMPTY_CELL_VALUE: GameEmpty = null;
 
-/**
- * Начальное состояние игрового поля (массив из 9 пустых ячеек).
- * @constant {BoardValue[]}
- */
 export const BOARD_INITIAL_STATE: Board = Array(BOARD_SIZE).fill(EMPTY_CELL_VALUE);
 
 /**

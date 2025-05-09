@@ -6,6 +6,16 @@ export enum GameFigure {
   O = '0',
 }
 
+export enum GameRole {
+  PLAYER = 'PLAYER',
+  BOT = 'BOT',
+}
+
+export interface InitialGameConfig {
+  starter: GameRole;
+  playerFigure: GameFigure;
+  botFigure: GameFigure;
+}
 /**
  * Пустое значение поля
  */
@@ -23,16 +33,15 @@ export type BoardValue = GameFigure | GameEmpty;
 export enum DrawResult {
   DRAW_RESULT = 'draw'
 }
+
+export enum GameNotFinished {
+  GAME_NOT_FINISHED = 'game is not finished'
+}
 /**
  * Тип игрового поля
  */
 export type Board = Array<BoardValue>;
 
-/**
- * Тип, представляющий результат игры.
- * Может быть игроком (X или O) или значением "draw" для ничьей.
- * @typedef {BoardValue | 'draw'} GameResult
- */
-export type GameResult = GameFigure | DrawResult;
+export type GameResult = GameFigure | DrawResult | GameNotFinished
 
 
