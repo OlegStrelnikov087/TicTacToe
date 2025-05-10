@@ -48,7 +48,7 @@ export const Board: FC = () => {
 
       if (!isPlayerMove) {
         setTimeout(() => {
-          const newBoard = botMove(board);
+          const newBoard = botMove(board, lastMoveIndex);
           const newMoveIndex = newBoard.findIndex((v, i) => v !== board[i]);
           setBoard(newBoard);
           setIsPlayerMove(true);
