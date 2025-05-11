@@ -1,9 +1,9 @@
 import { isGameOver } from '@utils/game-logic';
-import { Cell } from '@components/cell/cell';
-import { Modal } from '@components/modal/modal';
+import { Cell } from '@/components/cell/cell';
+import { Modal } from '@/components/modal/modal';
 import { BoardValue, GameNotFinished, GameResult, GameRole } from '@types/types';
 import React, { FC, useState } from 'react';
-import '@components/board/board.css';
+import '@components/board/board-style.css';
 import Lottie from 'lottie-react';
 import gridAnimation from '@assets/grid.json';
 import {
