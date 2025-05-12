@@ -1,14 +1,23 @@
-import '@app/app.css';
+import React, { useState } from 'react';
+import { Setup } from '@components/setup/setup';
 import { Board } from '@components/board/board';
-import { FC, JSX } from 'react';
+import { Controller } from '@controllers/controller-type';
+import '@app/app.css';
+export function App() {
+  const [controllers, setControllers] = useState<Controller[] | null>(null);
 
-export const App: FC = (): JSX.Element => {
   return (
-    <>
-      <header>Tic Tac Toe</header>
-      <main>
-        <Board />
-      </main>
-    </>
+    <div>
+      {controllers ? (
+        <>
+          <header>Tic Tac Toe</header>
+          <main>
+            <Board controllers={controllers} onRestart={() => setControllers(null)} />
+          </main>
+        </>
+      ) : (
+        <Setup onStart={setControllers} />
+      )}
+    </div>
   );
-};
+}
