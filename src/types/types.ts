@@ -11,11 +11,6 @@ export enum GameRole {
   BOT = 'BOT',
 }
 
-export interface InitialGameConfig {
-  starter: GameRole;
-  playerFigure: GameFigure;
-  botFigure: GameFigure;
-}
 /**
  * Пустое значение поля
  */

@@ -12,28 +12,19 @@ const animationData: Record<GameFigure, object> = {
 
 interface CellProps {
   value: BoardValue;
-  index: number
-  onSelect: (index: number, event: 'click' | 'complete') => void;
-  isLastMove: boolean
+  onClick: ()=> void;
 }
 
-export const Cell: FC<CellProps> = ({ value, index, onSelect: onSelect, isLastMove }) => {
+export const Cell: FC<CellProps> = ({ value, onClick }) => {
   return (
-    <div className="cell" onClick={()=>onSelect(index, 'click')}>
+    <div className="cell" onClick={onClick}>
       {value && (
         <Lottie
           animationData={animationData[value]}
           autoplay
           loop={false}
-          onComplete={()=>{
-            if (isLastMove) {
-              onSelect(index, 'complete')
-            }
-          }}
-
         />
       )}
     </div>
   );
 };
-

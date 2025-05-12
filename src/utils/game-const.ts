@@ -1,14 +1,4 @@
-import { GameEmpty, GameFigure, Board, InitialGameConfig, GameRole } from '@types/types';
-
-export const INITIAL_GAME: InitialGameConfig = {
-    starter: GameRole.PLAYER,
-    playerFigure: GameFigure.X,
-    botFigure: GameFigure.O,
-  };
-
-// export const PLAYER_FIGURE: GameFigure = GameFigure.X;
-
-// export const BOT_FIGURE: GameFigure = GameFigure.O;
+import { GameEmpty, Board } from '@types/types';
 
 export const BOARD_SIZE = 9;
 

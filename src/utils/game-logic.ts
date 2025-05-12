@@ -1,18 +1,10 @@
 import { BoardValue, DrawResult, GameFigure, GameResult, Board, GameNotFinished } from '@types/types';
-import { EMPTY_CELL_VALUE, INITIAL_GAME } from './game-const';
+import { EMPTY_CELL_VALUE } from './game-const';
 
 export const getIndexesOfEmptyCells = (board: Board): number[] =>
   board.map((val, i) => (val === EMPTY_CELL_VALUE ? i : EMPTY_CELL_VALUE
   )).filter((i): i is number => i !== EMPTY_CELL_VALUE);
 
-// export const botMove = (board: Board): Board => {
-//   const empty = getIndexesOfEmptyCells(board);
-//   if (empty.length === 0) return board;
-//   const index = empty[Math.floor(Math.random() * empty.length)];
-//   const newBoard = [...board];
-//   newBoard[index] = INITIAL_GAME.botFigure;
-//   return newBoard;
-// };
 const getAdjacentIndexes = (index: number): number[] => {
   const row = Math.floor(index / 3);
   const col = index % 3;
@@ -29,34 +21,31 @@ const getAdjacentIndexes = (index: number): number[] => {
   return adjacent;
 };
 
-export const botMove = (board: Board, lastMoveIndex: number | null, ): Board => {
+export const getBotMoveIndex = (board: Board, lastMoveIndex: number | null, botFigure: GameFigure): number | undefined => {
+  const playerFigure = botFigure === GameFigure.X ? GameFigure.O : GameFigure.X
   const emptyCells = getIndexesOfEmptyCells(board)
-  if (emptyCells.length === 0) return board
+  if (emptyCells.length === 0) return undefined
   // 1. Проверить — может ли бот победить на следующем ходу
   for (const i of emptyCells) {
     const newBoard = [...board];
-    newBoard[i] = INITIAL_GAME.botFigure;
-    if (isGameOver(newBoard) === INITIAL_GAME.botFigure) {
-      return newBoard; // Победа
+    newBoard[i] = botFigure;
+    if (isGameOver(newBoard) === botFigure) {
+      return i; // Победа
     }
   }
 
   // 2. Заблокировать игрока, если он может победить
   for (const i of emptyCells) {
     const newBoard = [...board];
-    newBoard[i] = INITIAL_GAME.playerFigure;
-    if (isGameOver(newBoard) === INITIAL_GAME.playerFigure) {
-      const blockBoard = [...board];
-      blockBoard[i] = INITIAL_GAME.botFigure;
-      return blockBoard; // Блокировка
+    newBoard[i] = playerFigure;
+    if (isGameOver(newBoard) === playerFigure) {
+      return i; // Блокировка
     }
   }
 
   // 3. Пойти в центр, если он пустой
-  if (board[4] === null) {
-    const newBoard = [...board];
-    newBoard[4] = INITIAL_GAME.botFigure;
-    return newBoard;
+  if (board[4] === EMPTY_CELL_VALUE) {
+    return 4;
   }
 
   // 4. Пойти на соседнюю клетку после хода игрока
@@ -65,16 +54,16 @@ export const botMove = (board: Board, lastMoveIndex: number | null, ): Board => 
     const freeAdjacent = adjacentIndexes.find(i => board[i] === null);
     if (freeAdjacent !== undefined) {
       const newBoard = [...board];
-      newBoard[freeAdjacent] = INITIAL_GAME.botFigure;
-      return newBoard;
+      newBoard[freeAdjacent] = botFigure;
+      return freeAdjacent;
     }
   }
 
   // 5. Просто случайный ход
   const index = emptyCells[Math.floor(Math.random() * emptyCells.length)];
   const newBoard = [...board];
-  newBoard[index] = INITIAL_GAME.botFigure;
-  return newBoard;
+  newBoard[index] = botFigure;
+  return index;
 
 }
 
