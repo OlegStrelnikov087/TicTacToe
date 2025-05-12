@@ -1,7 +1,7 @@
 
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { Cell } from '@/components/cell/cell';
-import { Modal } from '@/components/modal/modal';
+import { Cell } from '@components/cell/cell';
+import { Modal } from '@components/modal/modal';
 import Lottie from 'lottie-react';
 import gridAnimation from '@assets/grid.json';
 import { BoardValue, GameNotFinished, GameResult, GameFigure } from '@types/types';
